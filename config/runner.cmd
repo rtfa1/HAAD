@@ -1,0 +1,1 @@
+opencode run "$HAAD_PROMPT" --model opencode/grok-code

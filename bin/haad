@@ -1,0 +1,72 @@
+#!/bin/sh
+# haad - Cross-platform CLI tool
+# Works on macOS, Linux, and Windows (via Git Bash/WSL)
+
+set -e
+
+# Get the directory where haad is installed
+HAAD_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+HAAD_COMMANDS_DIR="$HAAD_ROOT/commands"
+
+# Colors (if terminal supports it)
+if [ -t 1 ]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[0;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m' # No Color
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    NC=''
+fi
+
+# Print usage
+usage() {
+    echo "Usage: haad <command> [options]"
+    echo ""
+    echo "Commands:"
+    echo "  brainstorm  Start a brainstorming session (Phase 1)"
+    echo "  research    Start the research phase (Phase 2)"
+    echo "  spec        Start the specification phase (Phase 3)"
+    echo "  plan        Start the execution planning phase (Phase 4)"
+    echo "  run         Auto-advance through all phases (Recommended)"
+    echo "  reset       Clear all generated data to dry-run again"
+    echo "  help        Show this help message"
+    echo ""
+    echo "Run 'haad <command> --help' for more information on a command."
+}
+
+# Main entry point
+main() {
+    if [ $# -eq 0 ]; then
+        usage
+        exit 1
+    fi
+
+    COMMAND="$1"
+    shift
+
+    case "$COMMAND" in
+        help|--help|-h)
+            usage
+            exit 0
+            ;;
+        *)
+            # Check if command exists
+            if [ -f "$HAAD_COMMANDS_DIR/$COMMAND.sh" ]; then
+                . "$HAAD_COMMANDS_DIR/$COMMAND.sh"
+                exit $?
+            else
+                echo "${RED}Error: Unknown command '$COMMAND'${NC}" >&2
+                echo ""
+                usage
+                exit 1
+            fi
+            ;;
+    esac
+}
+
+main "$@"
