@@ -3,6 +3,8 @@
 
 # HAAD Logs
 .haad/data/logs/
+/data/logs/
 
-# HAAD Generated Reports (Brainstorm)
-.haad/data/brainstorm/*.md
+#Environment files
+.env
+ 
