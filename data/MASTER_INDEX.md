@@ -23,10 +23,11 @@ This index maps the generated artifacts across the workflow, guiding agents to t
 **Directory**: `data/spec/`
 | File | Agent | Description |
 | :--- | :--- | :--- |
-| `01_HLASA.md` | **HLASA** | High-Level Architecture Spec |
-| `02_PRD.md` | **PRD** | Product Requirements Definition |
-| `03_HLASA2.md` | **HLASA2** | Structuring Plan (File Tree) |
-| `04_SPVA.md` | **SPVA** | Specification Plan Validation |
+| [01_HLASA.md](./01_HLASA.md) | **HLASA** | High-Level Architecture Spec |
+| [02_PRD.md](./02_PRD.md) | **PRD** | Product Requirements Definition |
+| [03_TPA.md](./03_TPA.md) | **TPA** | Test Plan (Raw Output) |
+| [tasks/TASK_INDEX.md](./tasks/TASK_INDEX.md) | **TPA** | Generated Validation Tasks |
+| [04_SPVA.md](./04_SPVA.md) | **SPVA** | Specification Plan Validation |
 | `DECISIONS.md` | **N/A** | Phase Approval Dashboard |
 
 ## 4. Execution Planning Phase

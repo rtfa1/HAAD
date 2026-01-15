@@ -39,6 +39,10 @@ clean_phase() {
         rm -f "$dir_path"/[0-9][0-9]_*.md
         # 2. Decisions dashboard
         rm -f "$dir_path"/DECISIONS.md
+        rm -f "$dir_path"/BRAINSTORM_DECISIONS.md # For Brainstorm phase
+        
+        # 3. Tasks directory (for Spec Phase)
+        [ -d "$dir_path/tasks" ] && rm -rf "$dir_path/tasks"
         
         echo "  [✓] Cleared reports and dashboard in $phase_name"
         haad_log "INFO" "RESET" "Cleared $phase_name data"

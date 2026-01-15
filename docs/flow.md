@@ -13,8 +13,9 @@ graph TD
     HC2 -- Needs Feedback --> RA
     HC2 -- Approved --> HLAS[Ready for Specification]
     HLAS --> HLASA[High Level Architecture Spec Agent / No code]
-    HLASA --> HLASA2[Structuring Agent]
-    HLASA2 --> SPVA[Spec Plan Validation Agent]
+    HLASA --> PRD[Product Requirements Definition Agent]
+    PRD --> TPA[Test Plan Agent]
+    TPA --> SPVA[Spec Plan Validation Agent]
     SPVA -- Issues Found --> HLASA
     SPVA -- Approved --> SP[Specification Plan]
     SP --> HR{Human Review}
@@ -41,7 +42,8 @@ graph TD
 
     subgraph Specification Phase
         HLASA
-        HLASA2
+        PRD
+        TPA
         SPVA
         SP
         HR

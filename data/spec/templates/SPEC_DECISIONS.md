@@ -12,7 +12,8 @@
 | :--- | :--- | :--- | :--- |
 | [01_HLASA.md](./01_HLASA.md) | **HLASA** | High Level Architecture | [ ] PENDING |
 | [02_PRD.md](./02_PRD.md) | **PRD** | Product Requirements | [ ] PENDING |
-| [03_HLASA2.md](./03_HLASA2.md) | **HLASA2** | Structure Plan | [ ] PENDING |
+| [03_TPA.md](./03_TPA.md) | **TPA** | Test Plan (Raw Tasks) | [ ] PENDING |
+| [tasks/TASK_INDEX.md](./tasks/TASK_INDEX.md) | **TPA** | Validation Tasks Registry | [ ] PENDING |
 | [04_SPVA.md](./04_SPVA.md) | **SPVA** | Plan Validation | [ ] PENDING |
 
 ---

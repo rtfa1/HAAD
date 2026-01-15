@@ -86,21 +86,85 @@ else
     echo "[PRD] Report generated at '$PRD_FILE'."
 fi
 
-# 4. Run HLASA2 (Structuring)
-HLASA2_FILE="$SPEC_DIR/03_HLASA2.md"
-if [ -f "$HLASA2_FILE" ]; then
-    echo "[HLASA2] Report already exists. Skipping."
+# 3. Run TPA (Test Plan Agent)
+TPA_FILE="$SPEC_DIR/03_TPA.md"
+TASKS_DIR="$SPEC_DIR/tasks"
+TASK_INDEX_FILE="$TASKS_DIR/TASK_INDEX.md"
+TASK_INDEX_TEMPLATE="$SPEC_DIR/templates/TASK_INDEX.md"
+
+if [ -f "$TPA_FILE" ]; then
+    echo "[TPA] Report already exists. Skipping."
 else
-    echo "[3/4] Running Structuring Agent (HLASA2)..."
+    echo "[3/4] Running Test Plan Agent (TPA)..."
+    
+    mkdir -p "$TASKS_DIR"
+    
+    # Initialize Task Index
+    if [ -f "$TASK_INDEX_TEMPLATE" ]; then
+        cp "$TASK_INDEX_TEMPLATE" "$TASK_INDEX_FILE"
+    else
+        echo "# Task Index" > "$TASK_INDEX_FILE"
+    fi
+
+    # Context for TPA
     HLASA_OUTPUT_CONTENT=$(cat "$HLASA_FILE")
     PRD_OUTPUT_CONTENT=$(cat "$PRD_FILE")
-    HLASA2_CONTEXT="High-Level Architecture:\n$HLASA_OUTPUT_CONTENT\n\nProduct Requirements:\n$PRD_OUTPUT_CONTENT"
-    HLASA2_OUTPUT=$(haad_run_agent "HLASA2" "$HLASA2_CONTEXT" "Planning project structure")
-    echo "$HLASA2_OUTPUT" > "$HLASA2_FILE"
-    echo "[HLASA2] Report generated at '$HLASA2_FILE'."
+    TPA_CONTEXT="High-Level Architecture:\n$HLASA_OUTPUT_CONTENT\n\nProduct Requirements:\n$PRD_OUTPUT_CONTENT"
+    
+    # Run Agent
+    TPA_OUTPUT=$(haad_run_agent "TPA" "$TPA_CONTEXT" "Defining validation tasks")
+    echo "$TPA_OUTPUT" > "$TPA_FILE"
+    echo "[TPA] Raw report generated at '$TPA_FILE'."
+
+    # Parse and Split Tasks
+    echo "Parsing TPA output into tasks..."
+    
+    # Use awk to split by delimiters
+    awk -v out_dir="$TASKS_DIR" '
+    BEGIN { task_count=0; in_task=0; }
+    /---TASK START---/ {
+        in_task=1;
+        task_content="";
+        next; 
+    }
+    /---TASK END---/ { 
+        in_task=0; 
+        task_count++;
+        
+        # Extract ID (e.g. T_001) for filename
+        match(task_content, /ID: ([A-Za-z0-9_]+)/, arr);
+        task_id = arr[1];
+        if (length(task_id) == 0) task_id = "TASK_" task_count;
+        
+        # Extract Title for Index
+        match(task_content, /Title: (.+)/, title_arr);
+        task_title = title_arr[1];
+        
+        # Write to file
+        filename = out_dir "/" task_id ".md";
+        print "# Validation Task: " task_id " - " task_title > filename;
+        print "\n**Status**: [ ] PENDING" >> filename;
+        print task_content >> filename;
+        close(filename);
+        
+        # Print info for shell loop to capture (hacky but works)
+        print "CREATED_TASK|" task_id "|" task_title "|" filename;
+    }
+    {
+        if (in_task) {
+            task_content = task_content "\n" $0;
+        }
+    }
+    ' "$TPA_FILE" | while IFS="|" read -r type id title path; do
+        if [ "$type" = "CREATED_TASK" ]; then
+            echo "  - Generated Task: $id ($title)"
+            # Append to Index
+            echo "| [$id](./$id.md) | $title | [ ] PENDING |" >> "$TASK_INDEX_FILE"
+        fi
+    done
 fi
 
-# 5. Run SPVA (Validation)
+# 4. Run SPVA (Validation)
 SPVA_FILE="$SPEC_DIR/04_SPVA.md"
 if [ -f "$SPVA_FILE" ]; then
     echo "[SPVA] Report already exists. Skipping."
@@ -108,9 +172,16 @@ else
     echo "[4/4] Running Spec Plan Validation Agent (SPVA)..."
     HLASA_OUTPUT_CONTENT=$(cat "$HLASA_FILE")
     PRD_OUTPUT_CONTENT=$(cat "$PRD_FILE")
-    HLASA2_OUTPUT_CONTENT=$(cat "$HLASA2_FILE")
     
-    SPVA_CONTEXT="Technical Baseline:\n$PSTRA_OUTPUT\n\nArchitecture:\n$HLASA_OUTPUT_CONTENT\n\nProduct Requirements:\n$PRD_OUTPUT_CONTENT\n\nStructure Plan:\n$HLASA2_OUTPUT_CONTENT"
+    # Load all tasks context
+    TASKS_CONTEXT=""
+    for t_file in "$TASKS_DIR"/*.md; do
+        if [ "$t_file" != "$TASK_INDEX_FILE" ]; then
+             TASKS_CONTEXT="$TASKS_CONTEXT\n\n$(cat "$t_file")"
+        fi
+    done
+    
+    SPVA_CONTEXT="Product Requirements:\n$PRD_OUTPUT_CONTENT\n\nValidation Tasks:\n$TASKS_CONTEXT"
     SPVA_OUTPUT=$(haad_run_agent "SPVA" "$SPVA_CONTEXT" "Validating specification plan")
     echo "$SPVA_OUTPUT" > "$SPVA_FILE"
     echo "[SPVA] Report generated at '$SPVA_FILE'."
