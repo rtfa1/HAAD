@@ -67,28 +67,38 @@ HLASA_OUTPUT=$(cat "$HLASA_FILE")
 TPA_OUTPUT=$(cat "$TPA_FILE")
 
 # 2. Run TBA (Task Breakdown)
+# 2. Run TBA (Task Breakdown Agent)
 TBA_FILE="$PLAN_DIR/01_TBA.md"
+TASKS_DIR="$PLAN_DIR/tasks"
+TASK_INDEX_FILE="$TASKS_DIR/TASK_INDEX.md"
+TASK_INDEX_TEMPLATE="$PLAN_DIR/templates/TASK_INDEX.md"
+
 if [ -f "$TBA_FILE" ]; then
     echo "[TBA] Report already exists. Skipping."
 else
     echo "[1/3] Running Task Breakdown Agent (TBA)..."
-    TBA_CONTEXT="Technical Baseline:\n$PSTRA_OUTPUT\n\nArchitecture:\n$HLASA_OUTPUT\n\nValidation Tasks:\n$TPA_OUTPUT"
-    TBA_OUTPUT=$(haad_run_agent "TBA" "$TBA_CONTEXT" "Breaking down project tasks")
+    
+    mkdir -p "$TASKS_DIR"
+    
+    # Initialize Task Index
+    if [ -f "$TASK_INDEX_TEMPLATE" ]; then
+        cp "$TASK_INDEX_TEMPLATE" "$TASK_INDEX_FILE"
+    else
+        echo "# Implementation Task Index" > "$TASK_INDEX_FILE"
+    fi
+
+    # Load Contexts
+    TASK_TEMPLATE_CONTENT=$(cat "$PLAN_DIR/templates/TASK.md")
+    
+    TBA_CONTEXT="Technical Baseline:\n$PSTRA_OUTPUT\n\nArchitecture:\n$HLASA_OUTPUT\n\nValidation Tasks:\n$TPA_OUTPUT\n\nProvided Task Template:\n$TASK_TEMPLATE_CONTENT"
+    
+    # Run Agent
+    TBA_OUTPUT=$(haad_run_agent "TBA" "$TBA_CONTEXT" "Breaking down implementation tasks")
     echo "$TBA_OUTPUT" > "$TBA_FILE"
     echo "[TBA] Report generated at '$TBA_FILE'."
-fi
-
-# 3. Run TRA (Task Refinement)
-TRA_FILE="$PLAN_DIR/02_TRA.md"
-if [ -f "$TRA_FILE" ]; then
-    echo "[TRA] Report already exists. Skipping."
-else
-    echo "[2/3] Running Task Refinement Agent (TRA)..."
-    TBA_OUTPUT_CONTENT=$(cat "$TBA_FILE")
-    TRA_CONTEXT="Task Breakdown Strategies:\n$TBA_OUTPUT_CONTENT"
-    TRA_OUTPUT=$(haad_run_agent "TRA" "$TRA_CONTEXT" "Refining tasks into actionable items")
-    echo "$TRA_OUTPUT" > "$TRA_FILE"
-    echo "[TRA] Report generated at '$TRA_FILE'."
+    
+    # NOTE: TBA is responsible for creating individual task files in $TASKS_DIR
+    echo "[TBA] Check $TASKS_DIR for generated implementation tasks."
 fi
 
 # 4. Run EPVA (Validation)
@@ -97,9 +107,8 @@ if [ -f "$EPVA_FILE" ]; then
     echo "[EPVA] Report already exists. Skipping."
 else
     echo "[3/3] Running Execution Plan Validation Agent (EPVA)..."
-    TRA_OUTPUT_CONTENT=$(cat "$TRA_FILE")
-    
-    EPVA_CONTEXT="Validation Tasks:\n$TPA_OUTPUT\n\nExecution Plan:\n$TRA_OUTPUT_CONTENT"
+    TASKS_INDEX="$TASK_INDEX_FILE"
+    EPVA_CONTEXT="Validation Tasks (TPA):\n$TPA_OUTPUT\n\nImplementation Tasks Index:\n$TASKS_INDEX"
     EPVA_OUTPUT=$(haad_run_agent "EPVA" "$EPVA_CONTEXT" "Validating execution plan")
     echo "$EPVA_OUTPUT" > "$EPVA_FILE"
     echo "[EPVA] Report generated at '$EPVA_FILE'."

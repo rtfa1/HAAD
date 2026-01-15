@@ -21,8 +21,7 @@ graph TD
     SP --> HR{Human Review}
     HR -- Spec Change --> SP
     HR -- Approved --> TBA[Task Breakdown Agent]
-    TBA --> TRA[Task Refinement Agent]
-    TRA --> EPVA[Execution Plan Validation Agent]
+    TBA --> EPVA[Execution Plan Validation Agent]
     EPVA -- Issues Found --> TBA
     EPVA -- Validated --> FMT[Features / Milestones / Tasks]
     FMT --> HR2{Human Review}
@@ -51,7 +50,6 @@ graph TD
 
     subgraph Execution Planning Phase
         TBA
-        TRA
         EPVA
         FMT
         HR2

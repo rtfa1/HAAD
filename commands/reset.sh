@@ -55,6 +55,7 @@ clean_phase() {
 clean_phase "brainstorm"
 clean_phase "research"
 clean_phase "spec"
+# Plan phase also has tasks dir now
 clean_phase "plan"
 
 echo "---------------------------------------------------"

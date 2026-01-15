@@ -34,9 +34,9 @@ This index maps the generated artifacts across the workflow, guiding agents to t
 **Directory**: `data/plan/`
 | File | Agent | Description |
 | :--- | :--- | :--- |
-| `01_TBA.md` | **TBA** | Task Breakdown (Milestones) |
-| `02_TRA.md` | **TRA** | Task Refinement (Detailed Tasks) |
-| `03_EPVA.md` | **EPVA** | Execution Plan Validation |
+| [01_TBA.md](./01_TBA.md) | **TBA** | Task Breakdown (Raw Plan) |
+| [tasks/TASK_INDEX.md](./tasks/TASK_INDEX.md) | **TBA** | Implementation Tasks Registry |
+| [03_EPVA.md](./03_EPVA.md) | **EPVA** | Execution Plan Validation |
 | `DECISIONS.md` | **N/A** | Phase Approval Dashboard |
 
 ## Navigation Tips
