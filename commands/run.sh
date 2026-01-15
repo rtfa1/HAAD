@@ -121,9 +121,10 @@ fi
 echo "[Orchestrator] Specification Phase: APPROVED [✓]"
 
 # 4. IMPLEMENTATION PLANNING PHASE
-# Checks: TBA, EPVA
+# Checks: TBA, TRA, EPVA
 if [ ! -f "$PLAN_DECISIONS" ] || \
    [ ! -f "$HAAD_ROOT/data/plan/01_TBA.md" ] || \
+   [ ! -f "$HAAD_ROOT/data/plan/02_TRA.md" ] || \
    [ ! -f "$HAAD_ROOT/data/plan/03_EPVA.md" ]; then
     echo "[Orchestrator] Starting Execution Planning Phase..."
     "$HAAD_ROOT/bin/haad" plan
@@ -132,6 +133,7 @@ fi
 check_and_approve "$PLAN_DECISIONS" "Execution Planning"
 
 if ! grep -q "\[01_TBA.md\].*\[x\] APPROVED" "$PLAN_DECISIONS" || \
+   ! grep -q "\[02_TRA.md\].*\[x\] APPROVED" "$PLAN_DECISIONS" || \
    ! grep -q "\[03_EPVA.md\].*\[x\] APPROVED" "$PLAN_DECISIONS"; then
     echo "[Orchestrator] Execution Planning Phase pending approval."
     echo "Please review: $PLAN_DECISIONS"

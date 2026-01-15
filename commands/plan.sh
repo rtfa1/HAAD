@@ -101,12 +101,28 @@ else
     echo "[TBA] Check $TASKS_DIR for generated implementation tasks."
 fi
 
+# 3. Run TRA (Task Refinement)
+TRA_FILE="$PLAN_DIR/02_TRA.md"
+if [ -f "$TRA_FILE" ]; then
+    echo "[TRA] Report already exists. Skipping."
+else
+    echo "[2/3] Running Task Refinement Agent (TRA)..."
+    
+    # Pass Directory Context - Agent will read/write files directly
+    TRA_CONTEXT="Technical Baseline:\n$PSTRA_OUTPUT\n\nArchitecture:\n$HLASA_OUTPUT\n\nTask Location:\n$TASKS_DIR\nTask Index:\n$TASK_INDEX_FILE"
+    
+    TRA_OUTPUT=$(haad_run_agent "TRA" "$TRA_CONTEXT" "Refining and enhancing tasks")
+    echo "$TRA_OUTPUT" > "$TRA_FILE"
+    echo "[TRA] Report generated at '$TRA_FILE'."
+fi
+
 # 4. Run EPVA (Validation)
 EPVA_FILE="$PLAN_DIR/03_EPVA.md"
 if [ -f "$EPVA_FILE" ]; then
     echo "[EPVA] Report already exists. Skipping."
 else
     echo "[3/3] Running Execution Plan Validation Agent (EPVA)..."
+    # Re-read index and tasks as they might have changed
     TASKS_INDEX="$TASK_INDEX_FILE"
     EPVA_CONTEXT="Validation Tasks (TPA):\n$TPA_OUTPUT\n\nImplementation Tasks Index:\n$TASKS_INDEX"
     EPVA_OUTPUT=$(haad_run_agent "EPVA" "$EPVA_CONTEXT" "Validating execution plan")

@@ -12,6 +12,7 @@
 | :--- | :--- | :--- | :--- |
 | [01_TBA.md](./01_TBA.md) | **TBA** | Task Breakdown | [ ] PENDING |
 | [tasks/TASK_INDEX.md](./tasks/TASK_INDEX.md) | **TBA** | Implementation Tasks | [ ] PENDING |
+| [02_TRA.md](./02_TRA.md) | **TRA** | Task Refinement | [ ] PENDING |
 | [03_EPVA.md](./03_EPVA.md) | **EPVA** | Plan Validation | [ ] PENDING |
 
 ---
