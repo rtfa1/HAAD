@@ -45,8 +45,8 @@ if ! grep -q "\[01_HLASA.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
     echo "Error: Architecture (HLASA) is not approved."
     exit 1
 fi
-if ! grep -q "\[02_HLASA2.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
-    echo "Error: Structure Plan (HLASA2) is not approved."
+if ! grep -q "\[03_TPA.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
+    echo "Error: Test Plan (TPA) is not approved."
     exit 1
 fi
 if ! grep -q "\[03_SPVA.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
@@ -60,11 +60,11 @@ mkdir -p "$PLAN_DIR"
 # Load Contexts
 PSTRA_FILE="$RESEARCH_DIR/02_PSTRA.md"
 HLASA_FILE="$SPEC_DIR/01_HLASA.md"
-HLASA2_FILE="$SPEC_DIR/02_HLASA2.md"
+TPA_FILE="$SPEC_DIR/03_TPA.md"
 
 PSTRA_OUTPUT=$(cat "$PSTRA_FILE")
 HLASA_OUTPUT=$(cat "$HLASA_FILE")
-HLASA2_OUTPUT=$(cat "$HLASA2_FILE")
+TPA_OUTPUT=$(cat "$TPA_FILE")
 
 # 2. Run TBA (Task Breakdown)
 TBA_FILE="$PLAN_DIR/01_TBA.md"
@@ -72,7 +72,7 @@ if [ -f "$TBA_FILE" ]; then
     echo "[TBA] Report already exists. Skipping."
 else
     echo "[1/3] Running Task Breakdown Agent (TBA)..."
-    TBA_CONTEXT="Technical Baseline:\n$PSTRA_OUTPUT\n\nArchitecture:\n$HLASA_OUTPUT\n\nStructure Plan:\n$HLASA2_OUTPUT"
+    TBA_CONTEXT="Technical Baseline:\n$PSTRA_OUTPUT\n\nArchitecture:\n$HLASA_OUTPUT\n\nValidation Tasks:\n$TPA_OUTPUT"
     TBA_OUTPUT=$(haad_run_agent "TBA" "$TBA_CONTEXT" "Breaking down project tasks")
     echo "$TBA_OUTPUT" > "$TBA_FILE"
     echo "[TBA] Report generated at '$TBA_FILE'."
@@ -99,7 +99,7 @@ else
     echo "[3/3] Running Execution Plan Validation Agent (EPVA)..."
     TRA_OUTPUT_CONTENT=$(cat "$TRA_FILE")
     
-    EPVA_CONTEXT="Original Spec Structure:\n$HLASA2_OUTPUT\n\nExecution Plan:\n$TRA_OUTPUT_CONTENT"
+    EPVA_CONTEXT="Validation Tasks:\n$TPA_OUTPUT\n\nExecution Plan:\n$TRA_OUTPUT_CONTENT"
     EPVA_OUTPUT=$(haad_run_agent "EPVA" "$EPVA_CONTEXT" "Validating execution plan")
     echo "$EPVA_OUTPUT" > "$EPVA_FILE"
     echo "[EPVA] Report generated at '$EPVA_FILE'."
