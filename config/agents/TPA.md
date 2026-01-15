@@ -23,7 +23,7 @@ Your goal is to validate the **Architecture (HLASA)** against the **Product Requ
 ## Output Instructions
 1.  **Generate Files**: You are responsible for creating the task files.
 2.  **Location**: Create a new file for EACH task in: `data/spec/tasks/`
-3.  **Naming**: `T_[Short_Title].md` (e.g., `T_Data_Flow_Integrity.md`).
+3.  **Naming**: `YYYYMMDDHHMMSS_[Short_Title].md` (e.g., `20260115000123_Data_Flow_Integrity.md`).
 4.  **Content**: STRICTLY follow the **Provided Task Template**.
 
 ## Task Index

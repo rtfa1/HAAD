@@ -49,8 +49,12 @@ if ! grep -q "\[03_TPA.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
     echo "Error: Test Plan (TPA) is not approved."
     exit 1
 fi
-if ! grep -q "\[03_SPVA.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
+if ! grep -q "\[04_SPVA.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
     echo "Error: Spec Validation (SPVA) is not approved."
+    exit 1
+fi
+if ! grep -q "\[tasks/TASK_INDEX.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
+    echo "Error: Validation Tasks Registry (TASK_INDEX) is not approved."
     exit 1
 fi
 

@@ -22,7 +22,7 @@ Your goal is to break down the "Mental Verification Tasks" and "Architecture" in
 ## Output Instructions
 1.  **Generate Files**: You are responsible for creating the task files.
 2.  **Location**: Create a new file for EACH task in: `data/plan/tasks/`
-3.  **Naming**: `I_[Short_Title].md` (e.g., `I_Setup_Canvas_Component.md`).
+3.  **Naming**: `YYYYMMDDHHMMSS_[Short_Title].md` (e.g., `20260115000123_Setup_Canvas_Component.md`).
 4.  **Content**: STRICTLY follow the **Provided Task Template**.
 
 ## Task Index
