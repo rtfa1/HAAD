@@ -57,7 +57,7 @@ if [ -f "$CIA_FILE" ]; then
     CIA_OUTPUT=$(cat "$CIA_FILE")
 else
     echo "[1/3] Running Codebase Inventory Agent (CIA)..."
-    CIA_OUTPUT=$(haad_run_agent "CIA" "$PWD" "Mapping existing project structure")
+    CIA_OUTPUT=$(haad_run_agent "CIA")
     echo "$CIA_OUTPUT" > "$CIA_FILE"
     echo "[CIA] Report generated at '$CIA_FILE'."
 fi
@@ -69,7 +69,7 @@ if [ -f "$ISA_FILE" ]; then
     ISA_OUTPUT=$(cat "$ISA_FILE")
 else
     echo "[2/3] Running Structuring Agent (ISA)..."
-    ISA_CONTEXT="User Idea: '$INPUT_IDEA'. Codebase Context: $CIA_OUTPUT"
+    ISA_CONTEXT="User Idea: '$INPUT_IDEA'."
     ISA_OUTPUT=$(haad_run_agent "ISA" "$ISA_CONTEXT" "Structuring the raw idea")
     echo "$ISA_OUTPUT" > "$ISA_FILE"
     echo "[ISA] Report generated at '$ISA_FILE'."

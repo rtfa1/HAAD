@@ -97,11 +97,12 @@ fi
 echo "[Orchestrator] Research Phase: APPROVED [✓]"
 
 # 3. SPECIFICATION PHASE
-# Checks: HLASA, HLASA2, SPVA
+# Checks: HLASA, PRD, HLASA2, SPVA
 if [ ! -f "$SPEC_DECISIONS" ] || \
    [ ! -f "$HAAD_ROOT/data/spec/01_HLASA.md" ] || \
-   [ ! -f "$HAAD_ROOT/data/spec/02_HLASA2.md" ] || \
-   [ ! -f "$HAAD_ROOT/data/spec/03_SPVA.md" ]; then
+   [ ! -f "$HAAD_ROOT/data/spec/02_PRD.md" ] || \
+   [ ! -f "$HAAD_ROOT/data/spec/03_HLASA2.md" ] || \
+   [ ! -f "$HAAD_ROOT/data/spec/04_SPVA.md" ]; then
     echo "[Orchestrator] Starting Specification Phase..."
     "$HAAD_ROOT/bin/haad" spec
 fi
@@ -109,8 +110,9 @@ fi
 check_and_approve "$SPEC_DECISIONS" "Specification"
 
 if ! grep -q "\[01_HLASA.md\].*\[x\] APPROVED" "$SPEC_DECISIONS" || \
-   ! grep -q "\[02_HLASA2.md\].*\[x\] APPROVED" "$SPEC_DECISIONS" || \
-   ! grep -q "\[03_SPVA.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
+   ! grep -q "\[02_PRD.md\].*\[x\] APPROVED" "$SPEC_DECISIONS" || \
+   ! grep -q "\[03_HLASA2.md\].*\[x\] APPROVED" "$SPEC_DECISIONS" || \
+   ! grep -q "\[04_SPVA.md\].*\[x\] APPROVED" "$SPEC_DECISIONS"; then
     echo "[Orchestrator] Specification Phase pending approval."
     echo "Please review: $SPEC_DECISIONS"
     exit 0

@@ -53,6 +53,7 @@ haad_run_agent() {
     haad_log "INFO" "ORCHESTRATOR" "Activating Agent: $agent_name"
     haad_log "DEBUG" "$agent_name" "System Prompt Length: ${#system_prompt} chars"
     haad_log "DEBUG" "$agent_name" "Context provided: $input_context"
+    haad_log "DEBUG" "$agent_name" "Full Prompt: $full_prompt"
     
     # Load Runner Configuration
     local runner_file="$HAAD_ROOT/config/runner.cmd"

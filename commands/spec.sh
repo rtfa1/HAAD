@@ -13,7 +13,7 @@ for arg in "$@"; do
             echo "Usage: haad spec"
             echo ""
             echo "Phase 3: Specification"
-            echo "Designs architecture (HLASA), file structure (HLASA2), and validates plan (SPVA)."
+            echo "Designs architecture (HLASA), defines requirements (PRD), plans structure (HLASA2), and validates (SPVA)."
             echo "Directly follows Research phase."
             echo ""
             echo "Options:"
@@ -66,36 +66,51 @@ HLASA_FILE="$SPEC_DIR/01_HLASA.md"
 if [ -f "$HLASA_FILE" ]; then
     echo "[HLASA] Report already exists. Skipping."
 else
-    echo "[1/3] Running High Level Architecture Spec Agent (HLASA)..."
+    echo "[1/4] Running High Level Architecture Spec Agent (HLASA)..."
     HLASA_CONTEXT="Codebase Context:\n$CIA_OUTPUT\n\nFeasibility Strategy:\n$RA_OUTPUT\n\nTechnical Baseline:\n$PSTRA_OUTPUT"
     HLASA_OUTPUT=$(haad_run_agent "HLASA" "$HLASA_CONTEXT" "Designing high-level architecture")
     echo "$HLASA_OUTPUT" > "$HLASA_FILE"
     echo "[HLASA] Report generated at '$HLASA_FILE'."
 fi
 
-# 3. Run HLASA2 (Structuring)
-HLASA2_FILE="$SPEC_DIR/02_HLASA2.md"
+# 3. Run PRD (Product Requirements)
+PRD_FILE="$SPEC_DIR/02_PRD.md"
+if [ -f "$PRD_FILE" ]; then
+    echo "[PRD] Report already exists. Skipping."
+else
+    echo "[2/4] Running Product Requirements Definition Agent (PRD)..."
+    HLASA_OUTPUT_CONTENT=$(cat "$HLASA_FILE")
+    PRD_CONTEXT="High-Level Architecture:\n$HLASA_OUTPUT_CONTENT\n\nTechnical Baseline:\n$PSTRA_OUTPUT"
+    PRD_OUTPUT=$(haad_run_agent "PRD" "$PRD_CONTEXT" "Defining product requirements")
+    echo "$PRD_OUTPUT" > "$PRD_FILE"
+    echo "[PRD] Report generated at '$PRD_FILE'."
+fi
+
+# 4. Run HLASA2 (Structuring)
+HLASA2_FILE="$SPEC_DIR/03_HLASA2.md"
 if [ -f "$HLASA2_FILE" ]; then
     echo "[HLASA2] Report already exists. Skipping."
 else
-    echo "[2/3] Running Structuring Agent (HLASA2)..."
+    echo "[3/4] Running Structuring Agent (HLASA2)..."
     HLASA_OUTPUT_CONTENT=$(cat "$HLASA_FILE")
-    HLASA2_CONTEXT="High-Level Architecture:\n$HLASA_OUTPUT_CONTENT"
+    PRD_OUTPUT_CONTENT=$(cat "$PRD_FILE")
+    HLASA2_CONTEXT="High-Level Architecture:\n$HLASA_OUTPUT_CONTENT\n\nProduct Requirements:\n$PRD_OUTPUT_CONTENT"
     HLASA2_OUTPUT=$(haad_run_agent "HLASA2" "$HLASA2_CONTEXT" "Planning project structure")
     echo "$HLASA2_OUTPUT" > "$HLASA2_FILE"
     echo "[HLASA2] Report generated at '$HLASA2_FILE'."
 fi
 
-# 4. Run SPVA (Validation)
-SPVA_FILE="$SPEC_DIR/03_SPVA.md"
+# 5. Run SPVA (Validation)
+SPVA_FILE="$SPEC_DIR/04_SPVA.md"
 if [ -f "$SPVA_FILE" ]; then
     echo "[SPVA] Report already exists. Skipping."
 else
-    echo "[3/3] Running Spec Plan Validation Agent (SPVA)..."
+    echo "[4/4] Running Spec Plan Validation Agent (SPVA)..."
     HLASA_OUTPUT_CONTENT=$(cat "$HLASA_FILE")
+    PRD_OUTPUT_CONTENT=$(cat "$PRD_FILE")
     HLASA2_OUTPUT_CONTENT=$(cat "$HLASA2_FILE")
     
-    SPVA_CONTEXT="Technical Baseline:\n$PSTRA_OUTPUT\n\nArchitecture:\n$HLASA_OUTPUT_CONTENT\n\nStructure Plan:\n$HLASA2_OUTPUT_CONTENT"
+    SPVA_CONTEXT="Technical Baseline:\n$PSTRA_OUTPUT\n\nArchitecture:\n$HLASA_OUTPUT_CONTENT\n\nProduct Requirements:\n$PRD_OUTPUT_CONTENT\n\nStructure Plan:\n$HLASA2_OUTPUT_CONTENT"
     SPVA_OUTPUT=$(haad_run_agent "SPVA" "$SPVA_CONTEXT" "Validating specification plan")
     echo "$SPVA_OUTPUT" > "$SPVA_FILE"
     echo "[SPVA] Report generated at '$SPVA_FILE'."

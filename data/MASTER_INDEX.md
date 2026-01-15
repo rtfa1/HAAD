@@ -24,8 +24,9 @@ This index maps the generated artifacts across the workflow, guiding agents to t
 | File | Agent | Description |
 | :--- | :--- | :--- |
 | `01_HLASA.md` | **HLASA** | High-Level Architecture Spec |
-| `02_HLASA2.md` | **HLASA2** | Structuring Plan (File Tree) |
-| `03_SPVA.md` | **SPVA** | Specification Plan Validation |
+| `02_PRD.md` | **PRD** | Product Requirements Definition |
+| `03_HLASA2.md` | **HLASA2** | Structuring Plan (File Tree) |
+| `04_SPVA.md` | **SPVA** | Specification Plan Validation |
 | `DECISIONS.md` | **N/A** | Phase Approval Dashboard |
 
 ## 4. Execution Planning Phase
