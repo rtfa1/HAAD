@@ -88,7 +88,7 @@ fi
 
 # --- Step 4: Decisions Dashboard ---
 DECISIONS_FILE="$BRAINSTORM_DIR/DECISIONS.md"
-TEMPLATE_FILE="$BRAINSTORM_DIR/templates/DECISIONS.md"
+TEMPLATE_FILE="$BRAINSTORM_DIR/templates/BRAINSTORM_DECISIONS.md"
 
 if [ ! -f "$DECISIONS_FILE" ] && [ -f "$TEMPLATE_FILE" ]; then
     echo "Initializing Decisions Dashboard from template..."

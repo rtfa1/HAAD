@@ -37,13 +37,18 @@ haad_run_agent() {
         system_prompt="$system_prompt\n\n## REQUIRED OUTPUT FORMAT\nYou must fill out this template:\n$template_content"
     fi
 
+    # Load Orchestrator Prompt (Global Top-Level)
+    local orchestrator_file="$HAAD_ROOT/config/agents/ORCHESTRATOR.md"
+    local orchestrator_prompt=""
+    if [ -f "$orchestrator_file" ]; then
+        orchestrator_prompt=$(cat "$orchestrator_file")
+    fi
+
     # Combine System Prompt and Content
     local full_prompt=""
-    if [ -n "$system_prompt" ]; then
-        full_prompt="SYSTEM_PROMPT:\n$system_prompt\n\nUSER_CONTEXT:\n$input_context"
-    else
-        full_prompt="$input_context"
-    fi
+    
+    # Structure: Orchestrator -> System (Agent Specific) -> User Context
+    full_prompt="GLOBAL_DIRECTIVES:\n$orchestrator_prompt\n\nSYSTEM_PROMPT:\n$system_prompt\n\nUSER_CONTEXT:\n$input_context"
     
     haad_log "INFO" "ORCHESTRATOR" "Activating Agent: $agent_name"
     haad_log "DEBUG" "$agent_name" "System Prompt Length: ${#system_prompt} chars"

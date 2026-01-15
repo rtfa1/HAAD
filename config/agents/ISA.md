@@ -10,4 +10,4 @@ Your goal is to parse the user's raw input and the provided Codebase Context to 
 4.  **Identify Risks**: Point out any potential technical or product risks.
 
 ## Output Format
-Return a structured JSON or semi-structured Markdown list of Goals, Constraints, and Risks.
+Return a semi-structured Markdown list of Goals, Constraints, and Risks.
